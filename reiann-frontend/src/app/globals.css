@@ -1,0 +1,760 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+/* Dark mode follows the `dark` class that next-themes puts on <html>. */
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * Design tokens from Figma (file "StudentHub — Strawberry Matcha Demo",
+ * collections Color / Layout). Names match the Figma code syntax
+ * (var(--color-primary), var(--space-2), var(--radius-md) ...), so a value
+ * read in Figma Dev Mode can be pasted here as is.
+ */
+@theme {
+  --font-sans: var(--font-plex-thai), ui-sans-serif, system-ui, sans-serif;
+
+  /* Color · Light */
+  --color-bg: #fff9f3;
+  --color-surface: #ffffff;
+  --color-surface-alt: #f7f3ec;
+  --color-surface-hover: #f1ebe3;
+
+  --color-primary: #547b5b;
+  --color-primary-hover: #456a4d;
+  --color-primary-active: #344d38;
+  --color-primary-soft: #eaf0e4;
+  --color-primary-soft-hover: #bfd0b2;
+  --color-on-primary: #ffffff;
+
+  --color-secondary: #f1b8b5;
+  --color-secondary-hover: #e9a8a7;
+  --color-secondary-soft: #fdf0ec;
+  --color-secondary-strong: #b8797b;
+  --color-on-secondary: #423c37;
+
+  --color-danger: #a8494b;
+  --color-danger-hover: #8f3c3e;
+  --color-on-danger: #ffffff;
+
+  --color-text: #423c37;
+  --color-text-secondary: #6a625b;
+  --color-text-muted: #afa49a;
+  --color-text-disabled: #bdb5ad;
+
+  --color-border: #e8e0d8;
+  --color-border-strong: #91867c;
+  --color-focus: #547b5b;
+
+  --color-success: #56865f;
+  --color-success-bg: #eaf4e9;
+  --color-warning: #a8792f;
+  --color-warning-bg: #fbf1d9;
+  --color-error: #c36f70;
+  --color-error-bg: #fbeaea;
+  --color-info: #5689a3;
+  --color-info-bg: #e8f2f7;
+
+  --color-course: #547b5b;
+  --color-review: #d99595;
+  --color-grade: #d5a84f;
+  --color-career: #a99bcf;
+  --color-career-bg: #f1edf8;
+  /* Curriculum graph: lines into / out of the hovered course. */
+  /* Vivid versions of the theme colours, for motion and decoration only (never text). */
+  --color-pop-pink: #ec7f97;
+  --color-pop-sky: #4ea7d8;
+  --color-pop-mango: #f5ae3c;
+  --color-pop-matcha: #6dbb74;
+  --color-pop-grape: #a584e4;
+  --color-edge-in: var(--color-pop-pink);
+  --color-edge-out: var(--color-pop-sky);
+  --color-prerequisite: #80b5cc;
+
+  --color-scrim: #14141280;
+
+  /* Layout */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-full: 999px;
+
+  --shadow-color-sm: #423c370f;
+  --shadow-color-md: #423c3714;
+  --shadow-color-lg: #423c371a;
+  --shadow-sm: 0 1px 3px var(--shadow-color-sm);
+  --shadow-md: 0 4px 12px var(--shadow-color-md);
+  --shadow-lg: 0 8px 24px var(--shadow-color-lg);
+
+  /*
+   * Motion (Figma page "Motion": styles Reiann/Pop In, Rise In, Toast Up, Fade Out).
+   * Soft and bouncy, but short: nothing blocks input, and
+   * entry animations use `backwards` fill so opacity/transform classes
+   * (dimmed cards, hover lifts) win once they finish;
+   * prefers-reduced-motion turns it all off (see the end of this file).
+   */
+  --duration-fast: 150ms;
+  --duration-base: 250ms;
+  --duration-slow: 420ms;
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-jelly: cubic-bezier(0.5, 1.8, 0.4, 0.8);
+
+  --animate-rise-in: rise-in var(--duration-slow) var(--ease-out-soft) backwards;
+  --animate-pop-in: pop-in var(--duration-slow) var(--ease-bounce) backwards;
+  --animate-toast-up: toast-up var(--duration-base) var(--ease-bounce) backwards;
+  --animate-fade-out: fade-out var(--duration-fast) ease-in both;
+  --animate-wiggle: wiggle 500ms var(--ease-out-soft);
+  --animate-jelly: jelly 500ms var(--ease-out-soft);
+  --animate-float: float 3.2s ease-in-out infinite;
+  --animate-grow-x: grow-x 700ms var(--ease-out-soft) backwards;
+  --animate-sparkle: sparkle 700ms var(--ease-out-soft) backwards;
+
+  @keyframes rise-in {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes pop-in {
+    0% { opacity: 0; transform: scale(0.82); }
+    60% { opacity: 1; transform: scale(1.05); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+  @keyframes toast-up {
+    from { opacity: 0; transform: translateY(16px) scale(0.96); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes fade-out {
+    to { opacity: 0; }
+  }
+  @keyframes wiggle {
+    0%, 100% { transform: rotate(0); }
+    25% { transform: rotate(-10deg) scale(1.08); }
+    50% { transform: rotate(8deg) scale(1.08); }
+    75% { transform: rotate(-4deg); }
+  }
+  @keyframes jelly {
+    0%, 100% { transform: scale(1, 1); }
+    30% { transform: scale(1.12, 0.88); }
+    50% { transform: scale(0.92, 1.08); }
+    70% { transform: scale(1.04, 0.96); }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+  }
+  @keyframes grow-x {
+    from { transform: scaleX(0); }
+    to { transform: scaleX(1); }
+  }
+  @keyframes sparkle {
+    0% { opacity: 0; transform: scale(0.3) rotate(-30deg); }
+    60% { opacity: 1; transform: scale(1.2) rotate(10deg); }
+    100% { opacity: 1; transform: scale(1) rotate(0); }
+  }
+}
+
+/* Color · Dark (gray, not green — see design direction) */
+.dark {
+  --color-bg: #201f1e;
+  --color-surface: #2a2928;
+  --color-surface-alt: #333231;
+  --color-surface-hover: #3c3a39;
+
+  --color-primary: #91ac83;
+  --color-primary-hover: #a7bd9b;
+  --color-primary-active: #bfd0b2;
+  --color-primary-soft: #3a443b;
+  --color-primary-soft-hover: #46524a;
+  --color-on-primary: #243027;
+
+  --color-secondary: #d99c9c;
+  --color-secondary-hover: #e6aeab;
+  --color-secondary-soft: #493638;
+  --color-secondary-strong: #e6aeab;
+  --color-on-secondary: #302526;
+
+  --color-danger: #e59a9a;
+  --color-danger-hover: #eeb0af;
+  --color-on-danger: #302526;
+
+  --color-text: #f8f3eb;
+  --color-text-secondary: #bfbcb8;
+  --color-text-muted: #93908c;
+  --color-text-disabled: #6f6c69;
+
+  --color-border: #474543;
+  --color-border-strong: #827f7c;
+  --color-focus: #a7bd9b;
+
+  --color-success: #91c49a;
+  --color-success-bg: #364339;
+  --color-warning: #e5bb70;
+  --color-warning-bg: #4a402c;
+  --color-error: #e59a9a;
+  --color-error-bg: #4b3336;
+  --color-info: #8dbdd5;
+  --color-info-bg: #30434c;
+
+  --color-course: #91ac83;
+  --color-review: #d99c9c;
+  --color-grade: #e5bb70;
+  --color-career: #b9a9df;
+  --color-career-bg: #3b3646;
+  --color-pop-pink: #f59bb0;
+  --color-pop-sky: #7cc4ea;
+  --color-pop-mango: #f7c268;
+  --color-pop-matcha: #8fd096;
+  --color-pop-grape: #bda3ef;
+  --color-prerequisite: #8dbdd5;
+
+  --color-scrim: #00000099;
+
+  --shadow-color-sm: #00000026;
+  --shadow-color-md: #00000033;
+  --shadow-color-lg: #00000040;
+}
+
+/* shadcn/ui names mapped onto the Reiann tokens */
+@theme inline {
+  --color-background: var(--color-bg);
+  --color-foreground: var(--color-text);
+  --color-card: var(--color-surface);
+  --color-card-foreground: var(--color-text);
+  --color-popover: var(--color-surface);
+  --color-popover-foreground: var(--color-text);
+  --color-primary-foreground: var(--color-on-primary);
+  --color-secondary-foreground: var(--color-on-secondary);
+  --color-muted: var(--color-surface-alt);
+  --color-muted-foreground: var(--color-text-secondary);
+  --color-accent: var(--color-surface-hover);
+  --color-accent-foreground: var(--color-text);
+  --color-destructive: var(--color-danger);
+  --color-input: var(--color-border-strong);
+  --color-ring: var(--color-focus);
+}
+
+/* Text styles from Figma (IBM Plex Sans Thai) */
+@utility type-display { font-size: 56px; line-height: 68px; font-weight: 700; }
+@utility type-h1 { font-size: 36px; line-height: 46px; font-weight: 700; }
+@utility type-h2 { font-size: 28px; line-height: 38px; font-weight: 700; }
+@utility type-h3 { font-size: 20px; line-height: 30px; font-weight: 600; }
+@utility type-stat { font-size: 32px; line-height: 42px; font-weight: 700; }
+@utility type-brand { font-size: 24px; line-height: 32px; font-weight: 700; }
+@utility type-body { font-size: 16px; line-height: 26px; font-weight: 400; }
+@utility type-body-medium { font-size: 16px; line-height: 26px; font-weight: 500; }
+@utility type-small { font-size: 14px; line-height: 22px; font-weight: 400; }
+@utility type-small-medium { font-size: 14px; line-height: 22px; font-weight: 500; }
+@utility type-label { font-size: 16px; line-height: 24px; font-weight: 600; }
+@utility type-badge { font-size: 12px; line-height: 18px; font-weight: 600; }
+@utility type-eyebrow { font-size: 12px; line-height: 18px; font-weight: 700; }
+@utility type-caption { font-size: 13px; line-height: 20px; font-weight: 400; }
+
+/*
+ * Stagger: give children style={{ "--i": n }} and they start 45ms apart
+ * (capped so long lists do not keep the reader waiting).
+ */
+@utility stagger {
+  animation-delay: calc(min(var(--i, 0), 10) * 45ms);
+}
+
+/* Press feedback for anything clickable: a small squish. */
+@utility press {
+  transition-property: transform, background-color, border-color, color, box-shadow;
+  transition-duration: var(--duration-fast);
+  transition-timing-function: var(--ease-bounce);
+  &:active:not(:disabled) {
+    transform: scale(0.96);
+  }
+}
+
+/* Cards that lift a little on hover. */
+@utility lift {
+  transition-property: transform, box-shadow, border-color, background-color;
+  transition-duration: var(--duration-base);
+  transition-timing-function: var(--ease-bounce);
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-focus/50;
+  }
+  html {
+    @apply font-sans;
+    color-scheme: light;
+  }
+  html.dark {
+    color-scheme: dark;
+  }
+  body {
+    @apply bg-bg text-text type-body antialiased;
+  }
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
+/*
+ * Curriculum graph (courses/graph). Hovering a card sets data-hovering on the
+ * board and data-hot on its lines: other lines fade, its lines turn pink
+ * (prerequisites coming in) or sky blue (courses it unlocks) and flow.
+ */
+.graph-board .graph-edge {
+  transition: opacity var(--duration-base) var(--ease-out-soft), stroke var(--duration-base) var(--ease-out-soft),
+    stroke-width var(--duration-base) var(--ease-bounce);
+}
+.graph-board[data-hovering] .graph-edge:not([data-hot]) {
+  opacity: 0.12;
+}
+.graph-board .graph-edge[data-hot] {
+  opacity: 1;
+  stroke-width: 3px;
+  stroke-dasharray: 8 6;
+  animation: edge-flow 700ms linear infinite;
+}
+.graph-board .graph-edge[data-hot="in"] {
+  stroke: var(--color-edge-in);
+  marker-end: url(#arrow-in);
+}
+.graph-board .graph-edge[data-hot="out"] {
+  stroke: var(--color-edge-out);
+  marker-end: url(#arrow-out);
+}
+@keyframes edge-flow {
+  to { stroke-dashoffset: -14; }
+}
+
+/* Click: the card squishes like jelly and throws a ring of coloured dots. */
+.graph-card.is-popping {
+  animation: jelly 420ms var(--ease-out-soft);
+}
+.graph-burst {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  width: 6px;
+  height: 6px;
+  margin: -3px 0 0 -3px;
+  border-radius: 9999px;
+  pointer-events: none;
+  opacity: 0;
+}
+.graph-card.is-popping .graph-burst {
+  animation: graph-burst 520ms var(--ease-out-soft);
+}
+@keyframes graph-burst {
+  0% {
+    opacity: 1;
+    box-shadow: 0 0 0 0 var(--color-edge-in), 0 0 0 0 var(--color-edge-out), 0 0 0 0 var(--color-warning),
+      0 0 0 0 var(--color-primary), 0 0 0 0 var(--color-career), 0 0 0 0 var(--color-secondary);
+  }
+  100% {
+    opacity: 0;
+    box-shadow: -70px -34px 0 1px var(--color-edge-in), 72px -30px 0 1px var(--color-edge-out), -40px 40px 0 1px var(--color-warning),
+      48px 42px 0 1px var(--color-primary), 0 -52px 0 1px var(--color-career), 0 50px 0 1px var(--color-secondary);
+  }
+}
+
+/* ---- Colourful motion ---- */
+
+/* Sidebar: the item's colour slides in behind it; the tile fills with it. */
+.nav-item {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+.nav-item::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--nav) 30%, transparent), color-mix(in srgb, var(--nav) 8%, transparent));
+  transform: translateX(-101%);
+  transition: transform var(--duration-base) var(--ease-out-soft);
+}
+.nav-item:hover::before,
+.nav-item:focus-visible::before,
+.nav-item[aria-current="page"]::before {
+  transform: none;
+}
+.nav-tile {
+  transition: background-color var(--duration-base) var(--ease-out-soft), color var(--duration-base) var(--ease-out-soft);
+}
+.nav-item:hover .nav-tile,
+.nav-item[aria-current="page"] .nav-tile {
+  background-color: var(--nav);
+  color: var(--color-surface);
+}
+/* Marker that squishes along to the selected item. */
+.nav-indicator {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  width: 4px;
+  border-radius: 9999px;
+  background: var(--nav);
+  opacity: 0;
+  pointer-events: none;
+}
+.nav-indicator[data-ready] {
+  transition: transform var(--duration-slow) var(--ease-bounce), background-color var(--duration-slow) var(--ease-out-soft);
+}
+
+/*
+ * Buttons: everything takes its colour from the button itself. --btn is the
+ * button's own colour (hover shadow, focus ring) and --btn-tint a see-through
+ * version that stays visible on top of it (click ripple, hover sheen).
+ * In a layer so utilities passed through className still win.
+ * ::before is the click ripple (shrinks to nothing while pressed, then blooms
+ * out on release), ::after the sheen on hover.
+ */
+@layer components {
+  [data-slot="button"] {
+    --btn: var(--color-primary);
+    --btn-tint: color-mix(in srgb, white 32%, transparent);
+  }
+  [data-slot="button"]:not([data-variant="link"]) {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+  }
+  [data-slot="button"][data-variant="soft"] {
+    --btn-tint: color-mix(in srgb, var(--color-primary) 24%, transparent);
+  }
+  [data-slot="button"][data-variant="outline"] {
+    --btn: var(--color-border-strong);
+    --btn-tint: color-mix(in srgb, var(--color-border-strong) 26%, transparent);
+  }
+  [data-slot="button"][data-variant="strawberry"] {
+    --btn: var(--color-secondary-strong);
+    --btn-tint: color-mix(in srgb, white 42%, transparent);
+  }
+  [data-slot="button"][data-variant="danger"] {
+    --btn: var(--color-danger);
+  }
+  [data-slot="button"][data-variant="ghost"] {
+    --btn: var(--color-text-secondary);
+    --btn-tint: color-mix(in srgb, var(--color-text-secondary) 20%, transparent);
+  }
+  [data-slot="button"]:not([data-variant="link"])::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: -1;
+    width: 140%;
+    aspect-ratio: 1;
+    translate: -50% -50%;
+    border-radius: 9999px;
+    background: radial-gradient(circle, var(--btn-tint) 0 55%, transparent 70%);
+    opacity: 0;
+    pointer-events: none;
+    transition: scale 520ms var(--ease-out-soft), opacity 520ms var(--ease-out-soft);
+  }
+  [data-slot="button"]:not([data-variant="link"]):active::before {
+    scale: 0;
+    opacity: 1;
+    transition: none;
+  }
+  [data-slot="button"][data-variant="default"]::after,
+  [data-slot="button"][data-variant="soft"]::after,
+  [data-slot="button"][data-variant="strawberry"]::after,
+  [data-slot="button"][data-variant="danger"]::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(105deg, transparent 25%, var(--btn-tint) 50%, transparent 75%);
+    transform: translateX(-110%);
+    pointer-events: none;
+  }
+  [data-slot="button"]:hover::after {
+    transform: translateX(110%);
+    transition: transform 700ms var(--ease-out-soft);
+  }
+}
+[data-slot="button"]:not([data-variant="link"]):not([data-variant="ghost"]):hover:not(:focus-visible) {
+  box-shadow: 0 8px 16px -8px var(--btn);
+}
+[data-slot="button"]:not([data-variant="link"]):hover svg:not(.animate-spin) {
+  animation: wiggle 500ms var(--ease-out-soft);
+}
+
+/*
+ * Text fields: put on the <input>, or on the box around one. Focus sends a
+ * halo out from the border and a sheen across; an error shakes it once.
+ * The inset shadow thickens the border without moving what is inside.
+ */
+.field {
+  --field: var(--color-focus);
+  transition: border-color var(--duration-fast) var(--ease-out-soft), box-shadow var(--duration-base) var(--ease-out-soft),
+    transform var(--duration-base) var(--ease-bounce);
+}
+.field:hover:not(:focus-within, :disabled, [aria-invalid="true"]) {
+  border-color: var(--color-primary);
+}
+.field:focus-within {
+  border-color: var(--field);
+  box-shadow: inset 0 0 0 1px var(--field), 0 0 0 3px color-mix(in srgb, var(--field) 22%, transparent);
+  transform: translateY(-1px);
+  background-image: linear-gradient(100deg, transparent, color-mix(in srgb, var(--color-pop-matcha) 26%, transparent), transparent);
+  background-repeat: no-repeat;
+  background-size: 45% 100%;
+  background-position: 260% 0;
+  animation: field-halo 460ms var(--ease-out-soft), field-sheen 640ms var(--ease-out-soft);
+}
+.field[aria-invalid="true"] {
+  --field: var(--color-error);
+  border-color: var(--field);
+  box-shadow: inset 0 0 0 1px var(--field);
+  animation: field-shake 340ms var(--ease-out-soft);
+}
+.field::placeholder,
+.field input::placeholder {
+  transition: opacity var(--duration-base) var(--ease-out-soft);
+}
+.field:focus-within::placeholder,
+.field:focus-within input::placeholder {
+  opacity: 0.55;
+}
+@keyframes field-halo {
+  0% { box-shadow: inset 0 0 0 1px var(--field), 0 0 0 0 color-mix(in srgb, var(--field) 45%, transparent); }
+  55% { box-shadow: inset 0 0 0 1px var(--field), 0 0 0 7px color-mix(in srgb, var(--field) 18%, transparent); }
+  100% { box-shadow: inset 0 0 0 1px var(--field), 0 0 0 3px color-mix(in srgb, var(--field) 22%, transparent); }
+}
+@keyframes field-sheen {
+  from { background-position: -160% 0; }
+  to { background-position: 260% 0; }
+}
+@keyframes field-shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-4px); }
+  45% { transform: translateX(4px); }
+  70% { transform: translateX(-2px); }
+}
+
+/* Filter chips: Chip sets --pop from its `pop` prop. */
+.chip-pop {
+  transition: transform var(--duration-base) var(--ease-bounce), background-color var(--duration-base) var(--ease-out-soft),
+    border-color var(--duration-base) var(--ease-out-soft), box-shadow var(--duration-base) var(--ease-out-soft);
+}
+.chip-pop:hover:not(:disabled) {
+  border-color: var(--pop);
+  background-color: color-mix(in srgb, var(--pop) 16%, var(--color-surface));
+  box-shadow: 0 6px 14px -8px var(--pop);
+}
+.chip-pop:hover:not(:disabled):not(:active) {
+  transform: translateY(-2px) rotate(-1.5deg);
+}
+.chip-pop:focus-visible {
+  border-color: var(--pop);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--pop) 38%, transparent);
+}
+.chip-pop[aria-pressed="true"] {
+  border-color: var(--pop);
+  background-image: linear-gradient(100deg, color-mix(in srgb, var(--pop) 30%, var(--color-surface)), color-mix(in srgb, var(--pop) 10%, var(--color-surface)));
+}
+
+/* Course rows: a bar and a wash in the course's colour (set --pop on the row). */
+.pop-row {
+  position: relative;
+  isolation: isolate;
+}
+.pop-row::before {
+  content: "";
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  left: 0;
+  width: 4px;
+  border-radius: 0 4px 4px 0;
+  background: var(--pop);
+  transform: scaleY(0);
+  transition: transform var(--duration-base) var(--ease-bounce);
+}
+.pop-row::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--pop) 18%, transparent), transparent 75%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--duration-base) var(--ease-out-soft);
+}
+.pop-row:hover::before,
+.pop-row:focus-visible::before {
+  transform: scaleY(1);
+}
+.pop-row:hover::after,
+.pop-row:focus-visible::after {
+  opacity: 1;
+}
+
+/* Grades that are not a normal result: their own colour and their own motion. */
+.pop-row[data-outcome="failed"] { --pop: var(--color-danger); }
+.pop-row[data-outcome="withdrawn"] { --pop: var(--color-border-strong); }
+.pop-row[data-outcome="incomplete"] { --pop: var(--color-pop-mango); }
+.pop-row[data-outcome="failed"]:hover :is([data-mark], [data-grade]),
+.graph-card[data-outcome="failed"]:hover [data-grade] {
+  animation: field-shake 340ms var(--ease-out-soft);
+}
+.pop-row[data-outcome="withdrawn"]::after {
+  background: repeating-linear-gradient(135deg, color-mix(in srgb, var(--pop) 20%, transparent) 0 6px, transparent 6px 12px);
+}
+.graph-card[data-outcome="withdrawn"]:hover {
+  background-image: repeating-linear-gradient(135deg, color-mix(in srgb, var(--color-border-strong) 14%, transparent) 0 6px, transparent 6px 12px);
+}
+.pop-row[data-outcome="incomplete"]:hover [data-grade],
+.graph-card[data-outcome="incomplete"]:hover [data-grade] {
+  animation: float 900ms ease-in-out infinite;
+}
+
+/* Calculator: the arrow nudges toward the projected GPAX. */
+.gpax-arrow {
+  display: inline-block;
+  animation: gpax-nudge 1.6s var(--ease-out-soft) infinite;
+}
+@keyframes gpax-nudge {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(5px); }
+}
+
+/* Cards: lift with a shadow and border in the card's colour (set --pop). */
+.pop-card {
+  transition: transform var(--duration-base) var(--ease-bounce), box-shadow var(--duration-base) var(--ease-out-soft),
+    border-color var(--duration-base) var(--ease-out-soft);
+}
+.pop-card:hover {
+  transform: translateY(-3px) rotate(-0.4deg);
+  border-color: color-mix(in srgb, var(--pop) 65%, var(--color-border));
+  box-shadow: 0 16px 30px -16px var(--pop);
+}
+.pop-card:hover [data-tile] {
+  animation: wiggle 500ms var(--ease-out-soft);
+}
+
+/* Top bar between pages. */
+.route-bar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 60;
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-pop-pink), var(--color-pop-mango), var(--color-pop-matcha), var(--color-pop-sky), var(--color-pop-grape));
+  transform: scaleX(0);
+  transform-origin: left;
+  pointer-events: none;
+}
+.route-bar.is-loading {
+  animation: route-load 1600ms var(--ease-out-soft) forwards;
+}
+.route-bar.is-done {
+  animation: route-done 480ms var(--ease-out-soft) forwards;
+}
+@keyframes route-load {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(0.82); }
+}
+@keyframes route-done {
+  0% { transform: scaleX(0.5); opacity: 1; }
+  70% { transform: scaleX(1); opacity: 1; }
+  100% { transform: scaleX(1); opacity: 0; }
+}
+
+/* Loading placeholders: a colour wave instead of a grey pulse. */
+.skeleton-wave {
+  background-color: var(--color-surface-alt);
+  background-image: linear-gradient(
+    100deg,
+    transparent 28%,
+    color-mix(in srgb, var(--color-pop-pink) 26%, transparent) 40%,
+    color-mix(in srgb, var(--color-pop-mango) 26%, transparent) 50%,
+    color-mix(in srgb, var(--color-pop-sky) 26%, transparent) 60%,
+    transparent 72%
+  );
+  background-size: 250% 100%;
+  animation: skeleton-wave 1500ms linear infinite;
+}
+@keyframes skeleton-wave {
+  from { background-position: 125% 0; }
+  to { background-position: -125% 0; }
+}
+
+/* Home header: one faint green glow drifting in the top right corner. */
+.hero-blobs {
+  position: absolute;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  /* Gone before the cards start: they are stacked below this layer. */
+  mask-image: linear-gradient(to bottom, black 45%, transparent);
+}
+.hero-blobs span {
+  position: absolute;
+  top: -120px;
+  right: 0;
+  width: 620px;
+  height: 340px;
+  /* Fades out inside its own box, so the clipped container never shows an edge. */
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--color-pop-matcha) 34%, transparent), transparent);
+  transform-origin: top right;
+  animation: blob-drift 9s ease-in-out infinite alternate;
+}
+:root.dark .hero-blobs span {
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--color-pop-matcha) 16%, transparent), transparent);
+}
+@keyframes blob-drift {
+  from { transform: translate(0, 0) scale(1); }
+  to { transform: translate(-110px, 36px) scale(1.15); }
+}
+
+/* Registered-term rows: on hover the credits give way to the edit button. */
+.term-credits {
+  transition: opacity var(--duration-fast) var(--ease-out-soft), transform var(--duration-base) var(--ease-out-soft);
+}
+.term-edit {
+  position: absolute;
+  top: 50%;
+  translate: 0 -50%;
+  opacity: 0;
+  scale: 0.85;
+  transition: opacity var(--duration-fast) var(--ease-out-soft), scale var(--duration-base) var(--ease-bounce);
+}
+.term-row:is(:hover, :focus-within, [data-open]) .term-credits {
+  opacity: 0;
+  transform: translateX(8px);
+}
+.term-row:is(:hover, :focus-within, [data-open]) .term-edit {
+  opacity: 1;
+  scale: 1;
+}
+/* Touch screens have no hover: keep the button showing. */
+@media (hover: none) {
+  .term-credits {
+    opacity: 0;
+  }
+  .term-edit {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+/* Respect the system setting: no movement, keep only instant state changes. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    animation-delay: 0ms !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+}
